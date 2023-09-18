@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Polyclinic_Schedule.DTO;
 
 namespace Polyclinic_Schedule.DB;
 

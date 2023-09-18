@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
-namespace Polyclinic_Schedule.DB;
+using Polyclinic_Schedule.DB;
 
 public partial class Doctor
 {
