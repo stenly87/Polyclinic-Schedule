@@ -1,0 +1,50 @@
+﻿@page "/"
+@using BlazorView.Data;
+@inject HttpClient httpclient;
+@inject SessionManager sessions;
+
+<PageTitle>Авторизация</PageTitle>
+
+<EditForm Model="@userData" OnSubmit="Auth">
+    <h4>Логин</h4>
+    <p>
+        <InputText id="login" @bind-Value="userData.Login" />
+    </p>
+    <h4>Пароль</h4>
+    <p>
+        <InputText id="pass" @bind-Value="userData.Password" />
+    </p>
+    @* <h4>Email</h4>
+    <p>
+        <InputText id="email" @bind-Value="userData.Email" />
+    </p> *@
+    <button type="submit">Авторизация</button>
+</EditForm>
+@message
+
+@code {
+    UserData userData = new();
+    string message = "";
+    async Task Auth()
+    {
+        var answer = await httpclient.PostAsJsonAsync(
+            "Users/Authorization", userData);
+        if (answer.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            int idUser = Convert.ToInt32(await answer.Content.ReadAsStringAsync());
+            string session = sessions.GenerateSession(idUser);
+
+        }
+        else
+        {
+            message = await answer.Content.ReadAsStringAsync();
+        }
+    }
+
+    public class UserData
+    {
+        public string? Login { get; set; }
+        public string? Password { get; set; }
+        public string? Email { get; set; }
+    }
+}
