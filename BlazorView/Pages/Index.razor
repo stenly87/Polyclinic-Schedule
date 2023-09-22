@@ -2,9 +2,15 @@
 @using BlazorView.Data;
 @inject HttpClient httpclient;
 @inject SessionManager sessions;
+@inject AuthenticationStateProvider auth;
+@inject NavigationManager nav;
 
 <PageTitle>Авторизация</PageTitle>
-
+<p>
+    <AuthorizeView>
+       <p>aboba</p>
+    </AuthorizeView>
+</p>
 <EditForm Model="@userData" OnSubmit="Auth">
     <h4>Логин</h4>
     <p>
@@ -20,6 +26,7 @@
     </p> *@
     <button type="submit">Авторизация</button>
 </EditForm>
+
 @message
 
 @code {
@@ -32,8 +39,9 @@
         if (answer.StatusCode == System.Net.HttpStatusCode.OK)
         {
             int idUser = Convert.ToInt32(await answer.Content.ReadAsStringAsync());
-            string session = sessions.GenerateSession(idUser);
-
+            string session = await sessions.GenerateSessionAsync(idUser);
+            ((CustomAuthStateProvider)auth).AuthUser(session, idUser);
+            //nav.NavigateTo("/counter");
         }
         else
         {
